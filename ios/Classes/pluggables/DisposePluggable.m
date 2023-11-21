@@ -8,7 +8,7 @@
 #import "DisposePluggable.h"
 #import "PreferencesManager.h"
 #import "Globals.h"
-#import "BackgroundLocatorPlugin.h"
+#import "BackgroundCallcardPlugin.h"
 
 @implementation DisposePluggable
 
@@ -16,7 +16,7 @@
     NSDictionary *map = @{
                      kArgDisposeCallback : @([PreferencesManager getCallbackHandle:kDisposeCallbackKey])
                      };
-    [[BackgroundLocatorPlugin getInstance] invokeMethod:kBCMDispose arguments:map];
+    [[BackgroundCallcardPlugin getInstance] invokeMethod:kBCMDispose arguments:map];
 }
 
 - (void)onServiceStart:(NSDictionary *)initialDataDictionary {

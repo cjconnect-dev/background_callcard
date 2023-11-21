@@ -8,7 +8,7 @@
 #import "InitPluggable.h"
 #import "PreferencesManager.h"
 #import "Globals.h"
-#import "BackgroundLocatorPlugin.h"
+#import "BackgroundCallcardPlugin.h"
 
 @implementation InitPluggable {
     BOOL isInitCallbackCalled;
@@ -32,7 +32,7 @@
                          kArgInitCallback : @([PreferencesManager getCallbackHandle:kInitCallbackKey]),
                          kArgInitDataCallback: initialDataDictionary
                          };
-        [[BackgroundLocatorPlugin getInstance] invokeMethod:kBCMInit arguments:map];
+        [[BackgroundCallcardPlugin getInstance] invokeMethod:kBCMInit arguments:map];
     }
     isInitCallbackCalled = YES;
 }

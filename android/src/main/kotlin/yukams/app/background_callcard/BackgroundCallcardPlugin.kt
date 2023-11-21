@@ -28,7 +28,7 @@ import yukams.app.background_callcard.IsolateHolderService.Companion.CACHED_TAG
 import yukams.app.background_callcard.pluggables.DisposePluggable
 import yukams.app.background_callcard.pluggables.InitPluggable
 
-class BackgroundLocatorPlugin
+class BackgroundCallcardPlugin
     : MethodCallHandler, FlutterPlugin, PluginRegistry.NewIntentListener, ActivityAware {
     var context: Context? = null
     private var activity: Activity? = null
@@ -55,12 +55,12 @@ class BackgroundLocatorPlugin
 
             if (IsolateHolderService.isServiceRunning) {
                 // The service is running already
-                Log.d("BackgroundLocatorPlugin", "Locator service is already running")
+                Log.d("BackgroundCallcardPlugin", "Locator service is already running")
                 result?.success(true)
                 return
             }
 
-            Log.d("BackgroundLocatorPlugin",
+            Log.d("BackgroundCallcardPlugin",
                     "start locator with ${PreferencesManager.getLocationClient(context)} client")
 
             val callbackHandle = args[Keys.ARG_CALLBACK] as Long
@@ -107,7 +107,7 @@ class BackgroundLocatorPlugin
 
         @JvmStatic
         private fun startIsolateService(context: Context, settings: Map<*, *>) {
-            Log.e("BackgroundLocatorPlugin", "startIsolateService")
+            Log.e("BackgroundCallcardPlugin", "startIsolateService")
             val intent = Intent(context, IsolateHolderService::class.java)
             intent.action = IsolateHolderService.ACTION_START
             intent.putExtra(
@@ -152,7 +152,7 @@ class BackgroundLocatorPlugin
         private fun stopIsolateService(context: Context) {
             val intent = Intent(context, IsolateHolderService::class.java)
             intent.action = IsolateHolderService.ACTION_SHUTDOWN
-            Log.d("BackgroundLocatorPlugin", "stopIsolateService => Shutting down locator plugin")
+            Log.d("BackgroundCallcardPlugin", "stopIsolateService => Shutting down locator plugin")
             ContextCompat.startForegroundService(context, intent)
         }
 
@@ -167,7 +167,7 @@ class BackgroundLocatorPlugin
             _isServiceRunning(context)
             if (!IsolateHolderService.isServiceRunning) {
                 // The service is not running
-                Log.d("BackgroundLocatorPlugin", "Locator service is not running, nothing to stop")
+                Log.d("BackgroundCallcardPlugin", "Locator service is not running, nothing to stop")
                 result?.success(true)
                 return
             }
@@ -246,7 +246,7 @@ class BackgroundLocatorPlugin
         fun registerAfterBoot(context: Context) {
             val args = PreferencesManager.getSettings(context)
 
-            val plugin = BackgroundLocatorPlugin()
+            val plugin = BackgroundCallcardPlugin()
             plugin.context = context
 
             initializeService(context, args)
@@ -340,7 +340,7 @@ class BackgroundLocatorPlugin
     }
 
     private fun onAttachedToEngine(context: Context, messenger: BinaryMessenger) {
-        val plugin = BackgroundLocatorPlugin()
+        val plugin = BackgroundCallcardPlugin()
         plugin.context = context
 
         channel = MethodChannel(messenger, Keys.CHANNEL_ID)

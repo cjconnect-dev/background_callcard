@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'background_locator.dart';
+import 'background_callcard.dart';
 
 class AutoStopHandler extends WidgetsBindingObserver {
   @override
@@ -9,7 +9,7 @@ class AutoStopHandler extends WidgetsBindingObserver {
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
-        await BackgroundLocator.unRegisterLocationUpdate();
+        await BackgroundCallcard.unRegisterLocationUpdate();
         break;
       case AppLifecycleState.resumed:
         break;

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:background_callcard/background_locator.dart';
+import 'package:background_callcard/background_callcard.dart';
 import 'package:background_callcard/location_dto.dart';
 import 'package:background_callcard/settings/android_settings.dart';
 import 'package:background_callcard/settings/ios_settings.dart';
@@ -94,7 +94,7 @@ class _MyAppState extends State<MyApp> {
       return;
     }
 
-    await BackgroundLocator.updateNotificationText(
+    await BackgroundCallcard.updateNotificationText(
         title: 'new location received',
         msg: '${DateTime.now()}',
         bigMsg: '${data.latitude}, ${data.longitude}');
@@ -102,10 +102,10 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initPlatformState() async {
     print('Initializing...');
-    await BackgroundLocator.initialize();
+    await BackgroundCallcard.initialize();
     logStr = await FileManager.readLogFile();
     print('Initialization done');
-    final _isRunning = await BackgroundLocator.isServiceRunning();
+    final _isRunning = await BackgroundCallcard.isServiceRunning();
     setState(() {
       isRunning = _isRunning;
     });
@@ -196,16 +196,16 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onShow() async {
-    await BackgroundLocator.showOverlayView();
+    await BackgroundCallcard.showOverlayView();
   }
 
   void _onClose() async {
-    await BackgroundLocator.closeOverlayView();
+    await BackgroundCallcard.closeOverlayView();
   }
 
   void onStop() async {
-    await BackgroundLocator.unRegisterLocationUpdate();
-    final _isRunning = await BackgroundLocator.isServiceRunning();
+    await BackgroundCallcard.unRegisterLocationUpdate();
+    final _isRunning = await BackgroundCallcard.isServiceRunning();
     setState(() {
       isRunning = _isRunning;
     });
@@ -214,7 +214,7 @@ class _MyAppState extends State<MyApp> {
   void _onStart() async {
     if (await _checkLocationPermission()) {
       await _startLocator();
-      final _isRunning = await BackgroundLocator.isServiceRunning();
+      final _isRunning = await BackgroundCallcard.isServiceRunning();
 
       setState(() {
         isRunning = _isRunning;
@@ -251,7 +251,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _startLocator() async{
     Map<String, dynamic> data = {'countInit': 1};
-    return await BackgroundLocator.registerLocationUpdate(LocationCallbackHandler.callback,
+    return await BackgroundCallcard.registerLocationUpdate(LocationCallbackHandler.callback,
         initCallback: LocationCallbackHandler.initCallback,
         initDataCallback: data,
         disposeCallback: LocationCallbackHandler.disposeCallback,

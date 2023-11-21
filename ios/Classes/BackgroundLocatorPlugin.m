@@ -1,11 +1,11 @@
-#import "BackgroundLocatorPlugin.h"
+#import "BackgroundCallcardPlugin.h"
 #import "Globals.h"
 #import "Utils/Util.h"
 #import "Preferences/PreferencesManager.h"
 #import "InitPluggable.h"
 #import "DisposePluggable.h"
 
-@implementation BackgroundLocatorPlugin {
+@implementation BackgroundCallcardPlugin {
     FlutterEngine *_headlessRunner;
     FlutterMethodChannel *_callbackChannel;
     FlutterMethodChannel *_mainChannel;
@@ -15,14 +15,14 @@
 }
 
 static FlutterPluginRegistrantCallback registerPlugins = nil;
-static BackgroundLocatorPlugin *instance = nil;
+static BackgroundCallcardPlugin *instance = nil;
 
 #pragma mark FlutterPlugin Methods
 
 + (void)registerWithRegistrar:(nonnull NSObject<FlutterPluginRegistrar> *)registrar {
     @synchronized(self) {
         if (instance == nil) {
-            instance = [[BackgroundLocatorPlugin alloc] init:registrar];
+            instance = [[BackgroundCallcardPlugin alloc] init:registrar];
             [registrar addApplicationDelegate:instance];
         }
     }
@@ -32,7 +32,7 @@ static BackgroundLocatorPlugin *instance = nil;
     registerPlugins = callback;
 }
 
-+ (BackgroundLocatorPlugin *) getInstance {
++ (BackgroundCallcardPlugin *) getInstance {
     return instance;
 }
 

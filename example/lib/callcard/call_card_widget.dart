@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:background_callcard/background_locator.dart';
+import 'package:background_callcard/background_callcard.dart';
 
 class CallCardWidget extends StatefulWidget {
   const CallCardWidget({super.key});
@@ -19,7 +19,7 @@ class _CallCardWidgetState extends State<CallCardWidget> {
           child: ElevatedButton(
               onPressed: () async {
                 // await _overlayCallCardPlugin.closeOverlayView();
-                await BackgroundLocator.closeOverlayView();
+                await BackgroundCallcard.closeOverlayView();
               },
               child: const Text('Close Overlay View')),
         ),

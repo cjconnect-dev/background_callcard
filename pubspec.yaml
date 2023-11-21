@@ -24,6 +24,6 @@ flutter:
     platforms:
       android:
         package: yukams.app.background_callcard
-        pluginClass: BackgroundLocatorPlugin
+        pluginClass: BackgroundCallcardPlugin
       ios:
-        pluginClass: BackgroundLocatorPlugin
+        pluginClass: BackgroundCallcardPlugin

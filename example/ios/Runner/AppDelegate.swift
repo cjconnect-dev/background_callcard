@@ -15,7 +15,7 @@ func registerPlugins(registry: FlutterPluginRegistry) {
             .LaunchOptionsKey: Any]?
     ) -> Bool {
         GeneratedPluginRegistrant.register(with: self)
-        BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)
+        BackgroundCallcardPlugin.setPluginRegistrantCallback(registerPlugins)
 
         registerOtherPlugins()
 
