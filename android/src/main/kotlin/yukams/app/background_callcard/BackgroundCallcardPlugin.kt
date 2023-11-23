@@ -24,7 +24,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
-import yukams.app.background_callcard.IsolateHolderService.Companion.CACHED_TAG
+import yukams.app.background_callcard.CallcardHolderService.Companion.CACHED_TAG
 import yukams.app.background_callcard.pluggables.DisposePluggable
 import yukams.app.background_callcard.pluggables.InitPluggable
 
@@ -53,7 +53,7 @@ class BackgroundCallcardPlugin
                                     result: Result?) {
             _isServiceRunning(context)
 
-            if (IsolateHolderService.isServiceRunning) {
+            if (CallcardHolderService.isServiceRunning) {
                 // The service is running already
                 Log.d("BackgroundCallcardPlugin", "Locator service is already running")
                 result?.success(true)
@@ -97,7 +97,7 @@ class BackgroundCallcardPlugin
                 return
             }
 
-            startIsolateService(context, settings)
+            startCallcardService(context, settings)
 
             // We need to know when the service binded exactly, there is some delay between starting a
             // service and it's binding
@@ -106,10 +106,9 @@ class BackgroundCallcardPlugin
         }
 
         @JvmStatic
-        private fun startIsolateService(context: Context, settings: Map<*, *>) {
-            Log.e("BackgroundCallcardPlugin", "startIsolateService")
-            val intent = Intent(context, IsolateHolderService::class.java)
-            intent.action = IsolateHolderService.ACTION_START
+        private fun startCallcardService(context: Context, settings: Map<*, *>) {
+            val intent = Intent(context, CallcardHolderService::class.java)
+            intent.action = CallcardHolderService.ACTION_START
             intent.putExtra(
                 Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME,
                     settings[Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME] as? String)
@@ -149,10 +148,10 @@ class BackgroundCallcardPlugin
         }
 
         @JvmStatic
-        private fun stopIsolateService(context: Context) {
-            val intent = Intent(context, IsolateHolderService::class.java)
-            intent.action = IsolateHolderService.ACTION_SHUTDOWN
-            Log.d("BackgroundCallcardPlugin", "stopIsolateService => Shutting down locator plugin")
+        private fun stopCallcardService(context: Context) {
+            val intent = Intent(context, CallcardHolderService::class.java)
+            intent.action = CallcardHolderService.ACTION_SHUTDOWN
+            Log.d("BackgroundCallcardPlugin", "stopCallcardService => Shutting down locator plugin")
             ContextCompat.startForegroundService(context, intent)
         }
 
@@ -165,14 +164,14 @@ class BackgroundCallcardPlugin
         @JvmStatic
         private fun unRegisterPlugin(context: Context, result: Result?) {
             _isServiceRunning(context)
-            if (!IsolateHolderService.isServiceRunning) {
+            if (!CallcardHolderService.isServiceRunning) {
                 // The service is not running
                 Log.d("BackgroundCallcardPlugin", "Locator service is not running, nothing to stop")
                 result?.success(true)
                 return
             }
 
-            stopIsolateService(context)
+            stopCallcardService(context)
 
 
             // We need to know when the service detached exactly, there is some delay between stopping a
@@ -184,23 +183,24 @@ class BackgroundCallcardPlugin
         @JvmStatic
         private fun isServiceRunning(context:Context?,result: Result?) {
             _isServiceRunning(context)
-            result?.success(IsolateHolderService.isServiceRunning)
+            result?.success(CallcardHolderService.isServiceRunning)
         }
 
         private fun _isServiceRunning(context:Context?){
             val activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?
             val runningServices = activityManager?.getRunningServices(Int.MAX_VALUE)
             val isServiceRunning = runningServices?.any {
-                 it.service.className.contains("${IsolateHolderService::class.simpleName}")
+                Log.d("isServiceRunning", "*********************** : ${it.service.className} == ${CallcardHolderService::class.simpleName}")
+                 it.service.className.contains("${CallcardHolderService::class.simpleName}")
             } ?: false
 
-            IsolateHolderService.isServiceRunning = isServiceRunning
+            CallcardHolderService.isServiceRunning = isServiceRunning
         }
 
         @JvmStatic
         private fun updateNotificationText(context: Context, args: Map<Any, Any>) {
-            val intent = Intent(context, IsolateHolderService::class.java)
-            intent.action = IsolateHolderService.ACTION_UPDATE_NOTIFICATION
+            val intent = Intent(context, CallcardHolderService::class.java)
+            intent.action = CallcardHolderService.ACTION_UPDATE_NOTIFICATION
             if (args.containsKey(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE)) {
                 intent.putExtra(
                     Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE,
@@ -222,15 +222,15 @@ class BackgroundCallcardPlugin
 
         @JvmStatic
         private fun showOverlayView(context: Context, args: Map<Any, Any>) {
-            val intent = Intent(context, IsolateHolderService::class.java)
-            intent.action = IsolateHolderService.ACTION_SHOW_OVERLAY_VIEW
+            val intent = Intent(context, CallcardHolderService::class.java)
+            intent.action = CallcardHolderService.ACTION_SHOW_OVERLAY_VIEW
             ContextCompat.startForegroundService(context, intent)
         }
 
         @JvmStatic
         private fun closeOverlayView(context: Context, args: Map<Any, Any>) {
-            val intent = Intent(context, IsolateHolderService::class.java)
-            intent.action = IsolateHolderService.ACTION_CLOSE_OVERLAY_VIEW
+            val intent = Intent(context, CallcardHolderService::class.java)
+            intent.action = CallcardHolderService.ACTION_CLOSE_OVERLAY_VIEW
             ContextCompat.startForegroundService(context, intent)
         }
 
@@ -256,7 +256,7 @@ class BackgroundCallcardPlugin
                 context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED
             ) {
-                startIsolateService(context, settings)
+                startCallcardService(context, settings)
             }
         }
     }
@@ -294,7 +294,7 @@ class BackgroundCallcardPlugin
             Keys.METHOD_PLUGIN_UPDATE_NOTIFICATION -> {
                 _isServiceRunning(context)
 
-                if (!IsolateHolderService.isServiceRunning) {
+                if (!CallcardHolderService.isServiceRunning) {
                     return
                 }
 
@@ -306,7 +306,7 @@ class BackgroundCallcardPlugin
                 result.success(true)
             }
             Keys.METHOD_PLUGIN_SHOW_OVERLAY_VIEW -> {
-                if (!IsolateHolderService.isServiceRunning) {
+                if (!CallcardHolderService.isServiceRunning) {
                     return
                 }
 
@@ -317,7 +317,7 @@ class BackgroundCallcardPlugin
                 result.success(true)
             }
             Keys.METHOD_PLUGIN_CLOSE_OVERLAY_VIEW -> {
-                if (!IsolateHolderService.isServiceRunning) {
+                if (!CallcardHolderService.isServiceRunning) {
                     return
                 }
 
@@ -353,13 +353,13 @@ class BackgroundCallcardPlugin
             return false
         }
 
-        IsolateHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
+        CallcardHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
             val notificationCallback =
                 PreferencesManager.getCallbackHandle(
                     activity!!,
                     Keys.NOTIFICATION_CALLBACK_HANDLE_KEY
                 )
-            if (notificationCallback != null && IsolateHolderService.backgroundEngine != null) {
+            if (notificationCallback != null && CallcardHolderService.backgroundEngine != null) {
                 val backgroundChannel =
                     MethodChannel(
                         binaryMessenger,

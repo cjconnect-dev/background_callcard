@@ -24,7 +24,7 @@ import java.util.HashMap
 import androidx.core.app.ActivityCompat
 import yukams.app.background_callcard.callcard.OverlayCallCardView
 
-class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateListener, Service() {
+class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateListener, Service() {
     companion object {
         @JvmStatic
         val ACTION_SHUTDOWN = "SHUTDOWN"
@@ -42,7 +42,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
         val ACTION_CLOSE_OVERLAY_VIEW = "ACTION_CLOSE_OVERLAY_VIEW"
 
         @JvmStatic
-        private val WAKELOCK_TAG = "IsolateHolderService::WAKE_LOCK"
+        private val WAKELOCK_TAG = "CallcardHolderService::WAKE_LOCK"
 
         @JvmStatic
         var backgroundEngine: FlutterEngine? = null
@@ -149,11 +149,11 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.e("IsolateHolderService", "onStartCommand => intent.action : ${intent?.action}")
+        Log.e("CallcardHolderService", "onStartCommand => intent.action : ${intent?.action}")
         if(intent == null) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Log.e("IsolateHolderService", "app has crashed, stopping it")
+                Log.e("CallcardHolderService", "app has crashed, stopping it")
                 stopSelf()
             }
             else {
@@ -193,7 +193,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     }
 
     private fun startHolderService(intent: Intent) {
-        Log.e("IsolateHolderService", "startHolderService")
+        Log.e("CallcardHolderService", "startHolderService")
         notificationChannelName =
             intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_CHANNEL_NAME).toString()
         notificationTitle =
@@ -227,7 +227,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     }
 
     private fun shutdownHolderService() {
-        Log.e("IsolateHolderService", "shutdownHolderService")
+        Log.e("CallcardHolderService", "shutdownHolderService")
         (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
             newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, WAKELOCK_TAG).apply {
                 if (isHeld) {
@@ -246,7 +246,7 @@ class IsolateHolderService : MethodChannel.MethodCallHandler, LocationUpdateList
     }
 
     private fun updateNotification(intent: Intent) {
-        Log.e("IsolateHolderService", "updateNotification")
+        Log.e("CallcardHolderService", "updateNotification")
         if (intent.hasExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE)) {
             notificationTitle =
                 intent.getStringExtra(Keys.SETTINGS_ANDROID_NOTIFICATION_TITLE).toString()

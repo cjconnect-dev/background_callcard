@@ -10,7 +10,7 @@ import android.view.WindowManager
 import io.flutter.embedding.android.FlutterTextureView
 import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngineCache
-import yukams.app.background_callcard.IsolateHolderService
+import yukams.app.background_callcard.CallcardHolderService
 
 class OverlayCallCardView(private val context: Context) {
   private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -20,7 +20,7 @@ class OverlayCallCardView(private val context: Context) {
   fun addOverlayViewAttach() {
     if (flutterView == null) {
       flutterView = FlutterView(context, FlutterTextureView(context))
-      val engine = FlutterEngineCache.getInstance()[IsolateHolderService.CACHED_TAG]
+      val engine = FlutterEngineCache.getInstance()[CallcardHolderService.CACHED_TAG]
       engine?.lifecycleChannel?.appIsResumed()
       engine?.let { flutterView?.attachToFlutterEngine(it) }
       flutterView?.fitsSystemWindows = true

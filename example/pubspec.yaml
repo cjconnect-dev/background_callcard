@@ -1,5 +1,5 @@
 name: background_callcard_example
-description: Demonstrates how to use the background_locator_2 plugin.
+description: Demonstrates how to use the background_callcard plugin.
 publish_to: 'none'
 
 environment:

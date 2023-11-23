@@ -3,7 +3,7 @@ package yukams.app.background_callcard.pluggables
 import android.content.Context
 import android.os.Handler
 import io.flutter.plugin.common.MethodChannel
-import yukams.app.background_callcard.IsolateHolderService
+import yukams.app.background_callcard.CallcardHolderService
 import yukams.app.background_callcard.Keys
 import yukams.app.background_callcard.PreferencesManager
 
@@ -18,7 +18,7 @@ class InitPluggable : Pluggable {
     override fun onServiceStart(context: Context) {
         if (!isInitCallbackCalled) {
             (PreferencesManager.getCallbackHandle(context, Keys.INIT_CALLBACK_HANDLE_KEY))?.let { initCallback ->
-                IsolateHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
+                CallcardHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
                     val initialDataMap = PreferencesManager.getDataCallback(context, Keys.INIT_DATA_CALLBACK_KEY)
                     val backgroundChannel = MethodChannel(binaryMessenger, Keys.BACKGROUND_CHANNEL_ID)
                     Handler(context.mainLooper)

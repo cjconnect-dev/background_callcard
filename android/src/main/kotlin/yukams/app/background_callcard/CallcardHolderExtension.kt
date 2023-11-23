@@ -12,20 +12,20 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterCallbackInformation
-import yukams.app.background_callcard.IsolateHolderService.Companion.isServiceInitialized
+import yukams.app.background_callcard.CallcardHolderService.Companion.isServiceInitialized
 import yukams.app.background_callcard.provider.LocationRequestOptions
 import java.lang.RuntimeException
 import java.util.concurrent.atomic.AtomicBoolean
 
-internal fun IsolateHolderService.startLocatorService(context: Context) {
+internal fun CallcardHolderService.startLocatorService(context: Context) {
 
-    val serviceStarted = AtomicBoolean(IsolateHolderService.isServiceRunning)
+    val serviceStarted = AtomicBoolean(CallcardHolderService.isServiceRunning)
     // start synchronized block to prevent multiple service instant
     synchronized(serviceStarted) {
         this.context = context
         // resetting the background engine to avoid being stuck after an app crash
-        IsolateHolderService.backgroundEngine?.destroy();
-        IsolateHolderService.backgroundEngine = null
+        CallcardHolderService.backgroundEngine?.destroy();
+        CallcardHolderService.backgroundEngine = null
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                 context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -33,8 +33,8 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
             ) {
                 // We need flutter engine to handle callback, so if it is not available we have to create a
                 // Flutter engine without any view
-                Log.e("IsolateHolderService", "startLocatorService: Start Flutter Engine")
-                IsolateHolderService.backgroundEngine = FlutterEngine(context)
+                Log.e("CallcardHolderService", "startLocatorService: Start Flutter Engine")
+                CallcardHolderService.backgroundEngine = FlutterEngine(context)
 
                 val callbackHandle = context.getSharedPreferences(
                     Keys.SHARED_PREFERENCES_KEY,
@@ -45,7 +45,7 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
                     FlutterCallbackInformation.lookupCallbackInformation(callbackHandle)
 
                 if(callbackInfo == null) {
-                    Log.e("IsolateHolderExtension", "Fatal: failed to find callback");
+                    Log.e("CallcardHolderExtension", "Fatal: failed to find callback");
                     return;
                 }
 
@@ -54,16 +54,16 @@ internal fun IsolateHolderService.startLocatorService(context: Context) {
                     FlutterInjector.instance().flutterLoader().findAppBundlePath(),
                     callbackInfo
                 )
-                IsolateHolderService.backgroundEngine?.dartExecutor?.executeDartCallback(args)
+                CallcardHolderService.backgroundEngine?.dartExecutor?.executeDartCallback(args)
                 isServiceInitialized = true
-                Log.e("IsolateHolderExtension", "service initialized")
+                Log.e("CallcardHolderExtension", "service initialized")
             }
         } catch (e: UnsatisfiedLinkError) {
             e.printStackTrace()
         }
     }
 
-    IsolateHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
+    CallcardHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
         backgroundChannel =
             MethodChannel(
                 binaryMessenger,
