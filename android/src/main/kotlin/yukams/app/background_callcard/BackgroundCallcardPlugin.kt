@@ -190,7 +190,6 @@ class BackgroundCallcardPlugin
             val activityManager = context?.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager?
             val runningServices = activityManager?.getRunningServices(Int.MAX_VALUE)
             val isServiceRunning = runningServices?.any {
-                Log.d("isServiceRunning", "*********************** : ${it.service.className} == ${CallcardHolderService::class.simpleName}")
                  it.service.className.contains("${CallcardHolderService::class.simpleName}")
             } ?: false
 
