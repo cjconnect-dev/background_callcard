@@ -19,7 +19,7 @@ class _CallCardWidgetState extends State<CallCardWidget> {
           child: ElevatedButton(
               onPressed: () async {
                 // await _overlayCallCardPlugin.closeOverlayView();
-                await BackgroundCallcard.closeOverlayView();
+                await BackgroundCallcard.closeCallcard();
               },
               child: const Text('Close Overlay View')),
         ),

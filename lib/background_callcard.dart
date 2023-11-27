@@ -81,13 +81,13 @@ class BackgroundCallcard {
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_UPDATE_NOTIFICATION, arg);
   }
 
-  static Future<void> showOverlayView() async {
+  static Future<void> showCallcard() async {
     final arg = {};
 
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_SHOW_OVERLAY_VIEW, arg);
   }
 
-  static Future<void> closeOverlayView() async {
+  static Future<void> closeCallcard() async {
     final arg = {};
 
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_CLOSE_OVERLAY_VIEW, arg);

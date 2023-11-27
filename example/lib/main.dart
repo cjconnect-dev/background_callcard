@@ -196,11 +196,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onShow() async {
-    await BackgroundCallcard.showOverlayView();
+    await BackgroundCallcard.showCallcard();
   }
 
   void _onClose() async {
-    await BackgroundCallcard.closeOverlayView();
+    await BackgroundCallcard.closeCallcard();
   }
 
   void onStop() async {
