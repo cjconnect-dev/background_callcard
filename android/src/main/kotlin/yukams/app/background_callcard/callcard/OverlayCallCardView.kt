@@ -29,8 +29,9 @@ class OverlayCallCardView(private val context: Context) {
       flutterView?.setBackgroundColor(Color.TRANSPARENT)
 
       val params = newWindowManagerLayoutParams()
-      params.height = dpToPx(200)
-      params.gravity = Gravity.BOTTOM
+      params.width = WindowManager.LayoutParams.MATCH_PARENT
+      params.height = WindowManager.LayoutParams.MATCH_PARENT
+      params.gravity = Gravity.TOP
       windowManager.addView(flutterView, params)
     }
   }

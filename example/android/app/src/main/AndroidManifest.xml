@@ -52,8 +52,7 @@
             android:name="yukams.app.background_callcard.CallcardHolderService"
             android:permission="android.permission.FOREGROUND_SERVICE"
             android:exported="true"
-            android:foregroundServiceType = "location"
-            />
+            android:foregroundServiceType = "location" />
 
         <meta-data android:name="flutterEmbedding" android:value="2"/>
 
