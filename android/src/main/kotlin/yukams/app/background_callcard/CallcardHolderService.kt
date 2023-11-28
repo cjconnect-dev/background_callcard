@@ -62,8 +62,7 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
         const val CACHED_TAG = "CachedEngine"
 
         fun getBinaryMessenger(context: Context?): BinaryMessenger? {
-            val engine = FlutterEngineCache.getInstance()[CACHED_TAG]
-            val messenger = engine?.dartExecutor?.binaryMessenger
+            val messenger = backgroundEngine?.dartExecutor?.binaryMessenger
             return messenger
                 ?: if (context != null) {
                     backgroundEngine = FlutterEngine(context)
@@ -384,11 +383,12 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
     }
 
     override fun onMessage(message: Any?, reply: BasicMessageChannel.Reply<Any?>) {
-        if (backgroundEngine != null) {
+        val engine = FlutterEngineCache.getInstance()[CACHED_TAG]
+        if (engine != null) {
             context?.let {
                 val backgroundMessageChannel =
                     BasicMessageChannel(
-                        getBinaryMessenger(it)!!,
+                        engine.dartExecutor.binaryMessenger,
                         Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
                         JSONMessageCodec.INSTANCE
                     )

@@ -418,14 +418,18 @@ class BackgroundCallcardPlugin
     }
 
     override fun onMessage(message: Any?, reply: BasicMessageChannel.Reply<Any?>) {
-        CallcardHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
-            val overlayMessageChannel = BasicMessageChannel(
-                binaryMessenger,
-                Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
-                JSONMessageCodec.INSTANCE
-            )
+        val engine = FlutterEngineCache.getInstance()[CACHED_TAG]
+        if (engine != null) {
+            context?.let {
+                val backgroundMessageChannel =
+                    BasicMessageChannel(
+                        engine.dartExecutor.binaryMessenger,
+                        Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
+                        JSONMessageCodec.INSTANCE
+                    )
 
-            overlayMessageChannel.send(message, reply)
+                backgroundMessageChannel.send(message, reply)
+            }
         }
     }
 }

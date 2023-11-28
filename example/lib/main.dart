@@ -204,7 +204,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onClose() async {
-    await BackgroundCallcard.closeCallcard({'key': 'value'});
+    await BackgroundCallcard.closeCallcard({});
   }
 
   void onStop() async {
