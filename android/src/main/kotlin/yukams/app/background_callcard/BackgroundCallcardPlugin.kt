@@ -226,6 +226,16 @@ class BackgroundCallcardPlugin
 
         @JvmStatic
         private fun showOverlayView(context: Context, args: Map<Any, Any>) {
+            context.let {
+                val enn = FlutterEngineGroup(it)
+                val dEntry = DartExecutor.DartEntrypoint(
+                    FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+                    "overlayMain"
+                )
+                val engine = enn.createAndRunEngine(it, dEntry)
+                FlutterEngineCache.getInstance().put(CACHED_TAG, engine)
+            }
+
             val intent = Intent(context, CallcardHolderService::class.java)
             intent.action = CallcardHolderService.ACTION_SHOW_OVERLAY_VIEW
             ContextCompat.startForegroundService(context, intent)
@@ -233,6 +243,8 @@ class BackgroundCallcardPlugin
 
         @JvmStatic
         private fun closeOverlayView(context: Context, args: Map<Any, Any>) {
+            FlutterEngineCache.getInstance().remove(CACHED_TAG)
+
             val intent = Intent(context, CallcardHolderService::class.java)
             intent.action = CallcardHolderService.ACTION_CLOSE_OVERLAY_VIEW
             ContextCompat.startForegroundService(context, intent)
@@ -403,15 +415,15 @@ class BackgroundCallcardPlugin
         activity = binding.activity
         binding.addOnNewIntentListener(this)
 
-        context?.let {
-            val enn = FlutterEngineGroup(it)
-            val dEntry = DartExecutor.DartEntrypoint(
-                FlutterInjector.instance().flutterLoader().findAppBundlePath(),
-                "overlayMain"
-            )
-            val engine = enn.createAndRunEngine(it, dEntry)
-            FlutterEngineCache.getInstance().put(CACHED_TAG, engine)
-        }
+//        context?.let {
+//            val enn = FlutterEngineGroup(it)
+//            val dEntry = DartExecutor.DartEntrypoint(
+//                FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+//                "overlayMain"
+//            )
+//            val engine = enn.createAndRunEngine(it, dEntry)
+//            FlutterEngineCache.getInstance().put(CACHED_TAG, engine)
+//        }
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
