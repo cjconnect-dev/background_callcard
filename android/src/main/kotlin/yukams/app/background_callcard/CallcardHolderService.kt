@@ -62,11 +62,6 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
         const val CACHED_TAG = "CachedEngine"
 
         fun getBinaryMessenger(context: Context?): BinaryMessenger? {
-            val engine = FlutterEngineCache.getInstance()[CACHED_TAG]
-            if (engine != null) {
-                return engine.dartExecutor.binaryMessenger;
-            }
-
             val messenger = backgroundEngine?.dartExecutor?.binaryMessenger
             return messenger
                 ?: if (context != null) {

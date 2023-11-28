@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.WindowManager
