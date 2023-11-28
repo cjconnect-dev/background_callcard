@@ -90,7 +90,7 @@ class BackgroundCallcard {
     await _messageChannel.send(args);
   }
 
-  static Future<void> closeCallcard() async {
+  static Future<void> closeCallcard(Map<dynamic, dynamic> args) async {
     final arg = {};
 
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_CLOSE_OVERLAY_VIEW, arg);

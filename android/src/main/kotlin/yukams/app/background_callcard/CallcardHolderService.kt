@@ -22,6 +22,7 @@ import yukams.app.background_callcard.pluggables.Pluggable
 import yukams.app.background_callcard.provider.*
 import java.util.HashMap
 import androidx.core.app.ActivityCompat
+import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.JSONMessageCodec
 import yukams.app.background_callcard.callcard.OverlayCallCardView
@@ -61,7 +62,8 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
         const val CACHED_TAG = "CachedEngine"
 
         fun getBinaryMessenger(context: Context?): BinaryMessenger? {
-            val messenger = backgroundEngine?.dartExecutor?.binaryMessenger
+            val engine = FlutterEngineCache.getInstance()[CACHED_TAG]
+            val messenger = engine?.dartExecutor?.binaryMessenger
             return messenger
                 ?: if (context != null) {
                     backgroundEngine = FlutterEngine(context)
@@ -96,6 +98,11 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
         startLocatorService(this)
         startForeground(notificationId, getNotification())
         overlayCallCardView = OverlayCallCardView(this);
+        overlayMessageChannel = BasicMessageChannel(
+            getBinaryMessenger(this)!!,
+            Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
+            JSONMessageCodec.INSTANCE
+        )
     }
 
     private fun start() {

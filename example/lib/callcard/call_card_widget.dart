@@ -19,13 +19,14 @@ class _CallCardWidgetState extends State<CallCardWidget> {
           child: ElevatedButton(
               onPressed: () async {
                 // await _overlayCallCardPlugin.closeOverlayView();
-                await BackgroundCallcard.closeCallcard();
+                await BackgroundCallcard.closeCallcard({'key': 'value'});
               },
               child: StreamBuilder<dynamic>(
                 stream: BackgroundCallcard.dataListener,
                 builder: (context, snapshot) {
+                  print('************************************** snapshot.hasData : ${snapshot.hasData}');
                   if (snapshot.hasData) {
-                    return Text('Close Overlay View : ${snapshot.data}');
+                    return Text('Close Overlay View\n${snapshot.data}');
                   }
                   return const Text('Close Overlay View');
                 },

@@ -341,6 +341,7 @@ class BackgroundCallcardPlugin
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        messageChannel?.setMessageHandler(null)
     }
 
     private fun onAttachedToEngine(context: Context, messenger: BinaryMessenger) {
