@@ -10,6 +10,8 @@ import com.google.android.gms.location.LocationRequest
 import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.plugin.common.BasicMessageChannel
+import io.flutter.plugin.common.JSONMessageCodec
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterCallbackInformation
 import yukams.app.background_callcard.CallcardHolderService.Companion.isServiceInitialized
@@ -79,6 +81,12 @@ internal fun CallcardHolderService.startLocatorService(context: Context) {
         } catch (e: RuntimeException) {
             e.printStackTrace()
         }
+
+        overlayMessageChannel = BasicMessageChannel(
+            binaryMessenger,
+            Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
+            JSONMessageCodec.INSTANCE
+        )
     }
 }
 

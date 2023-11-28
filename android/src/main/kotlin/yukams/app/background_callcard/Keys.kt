@@ -30,6 +30,9 @@ class Keys {
         val BACKGROUND_CHANNEL_ID = "callcard.app.yukams/locator_plugin_background"
 
         @JvmStatic
+        val BACKGROUND_MESSAGE_CHANNEL_ID = "callcard.app.yukams/locator_plugin_background_message"
+
+        @JvmStatic
         val METHOD_SERVICE_INITIALIZED = "callcard.LocatorService.initialized"
 
         @JvmStatic

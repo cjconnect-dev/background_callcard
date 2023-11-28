@@ -18,7 +18,9 @@ import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugin.common.JSONMessageCodec
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -29,13 +31,16 @@ import yukams.app.background_callcard.pluggables.DisposePluggable
 import yukams.app.background_callcard.pluggables.InitPluggable
 
 class BackgroundCallcardPlugin
-    : MethodCallHandler, FlutterPlugin, PluginRegistry.NewIntentListener, ActivityAware {
+    : MethodCallHandler, FlutterPlugin, PluginRegistry.NewIntentListener, ActivityAware, BasicMessageChannel.MessageHandler<Any?> {
     var context: Context? = null
     private var activity: Activity? = null
 
     companion object {
         @JvmStatic
         private var channel: MethodChannel? = null
+
+        @JvmStatic
+        private var messageChannel: BasicMessageChannel<Any?>? = null
 
         @JvmStatic
         private fun sendResultWithDelay(context: Context, result: Result?, value: Boolean, delay: Long) {
@@ -344,6 +349,13 @@ class BackgroundCallcardPlugin
 
         channel = MethodChannel(messenger, Keys.CHANNEL_ID)
         channel?.setMethodCallHandler(plugin)
+
+        messageChannel = BasicMessageChannel<Any?>(
+            messenger,
+            Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
+            JSONMessageCodec.INSTANCE
+        )
+        messageChannel?.setMessageHandler(this)
     }
 
     override fun onNewIntent(intent: Intent): Boolean {
@@ -396,7 +408,6 @@ class BackgroundCallcardPlugin
                 FlutterInjector.instance().flutterLoader().findAppBundlePath(),
                 "overlayMain"
             )
-            Log.d("CallcardHolderService", "******************************** dEntry : $dEntry")
             val engine = enn.createAndRunEngine(it, dEntry)
             FlutterEngineCache.getInstance().put(CACHED_TAG, engine)
         }
@@ -405,5 +416,15 @@ class BackgroundCallcardPlugin
     override fun onDetachedFromActivityForConfigChanges() {
     }
 
+    override fun onMessage(message: Any?, reply: BasicMessageChannel.Reply<Any?>) {
+        CallcardHolderService.getBinaryMessenger(context)?.let { binaryMessenger ->
+            val overlayMessageChannel = BasicMessageChannel(
+                binaryMessenger,
+                Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
+                JSONMessageCodec.INSTANCE
+            )
 
+            overlayMessageChannel.send(message, reply)
+        }
+    }
 }

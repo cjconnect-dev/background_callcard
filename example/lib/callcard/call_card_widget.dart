@@ -21,7 +21,15 @@ class _CallCardWidgetState extends State<CallCardWidget> {
                 // await _overlayCallCardPlugin.closeOverlayView();
                 await BackgroundCallcard.closeCallcard();
               },
-              child: const Text('Close Overlay View')),
+              child: StreamBuilder<dynamic>(
+                stream: BackgroundCallcard.dataListener,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text('Close Overlay View : ${snapshot.data}');
+                  }
+                  return const Text('Close Overlay View');
+                },
+              )),
         ),
       ),
     );

@@ -15,6 +15,10 @@ import 'location_dto.dart';
 class BackgroundCallcard {
   static const MethodChannel _channel = const MethodChannel(Keys.CHANNEL_ID);
 
+  static const _messageChannel = BasicMessageChannel(Keys.BACKGROUND_MESSAGE_CHANNEL_ID, JSONMessageCodec());
+  static final StreamController _messageController = StreamController.broadcast();
+
+
   static Future<void> initialize() async {
     final CallbackHandle callback =
         PluginUtilities.getCallbackHandle(callbackDispatcher)!;
@@ -81,15 +85,34 @@ class BackgroundCallcard {
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_UPDATE_NOTIFICATION, arg);
   }
 
-  static Future<void> showCallcard() async {
-    final arg = {};
-
-    await _channel.invokeMethod(Keys.METHOD_PLUGIN_SHOW_OVERLAY_VIEW, arg);
+  static Future<void> showCallcard(Map<dynamic, dynamic> args) async {
+    await _channel.invokeMethod(Keys.METHOD_PLUGIN_SHOW_OVERLAY_VIEW, args);
+    await _messageChannel.send(args);
   }
 
   static Future<void> closeCallcard() async {
     final arg = {};
 
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_CLOSE_OVERLAY_VIEW, arg);
+  }
+
+  static Stream<dynamic>? get dataListener {
+    _messageChannel.setMessageHandler((mssg) async {
+      if (_messageController.isClosed) return '';
+      _messageController.add(mssg);
+      return mssg;
+    });
+
+    if (_messageController.isClosed) return null;
+    return _messageController.stream;
+  }
+
+  static void stopDataLIstener() {
+    try {
+      _messageController.stream.drain();
+      _messageController.close();
+    } catch (e) {
+
+    }
   }
 }

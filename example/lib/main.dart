@@ -196,7 +196,11 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _onShow() async {
-    await BackgroundCallcard.showCallcard();
+    await BackgroundCallcard.showCallcard({
+      'key1': 'value1',
+      'key2': 'value2',
+      'key3': 'value3',
+    });
   }
 
   void _onClose() async {

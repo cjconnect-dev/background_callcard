@@ -2,7 +2,8 @@ class Keys {
   static const String CHANNEL_ID = 'callcard.app.yukams/locator_plugin';
   static const String BACKGROUND_CHANNEL_ID =
       'callcard.app.yukams/locator_plugin_background';
-
+  static const String BACKGROUND_MESSAGE_CHANNEL_ID =
+      'callcard.app.yukams/locator_plugin_background_message';
   static const String METHOD_SERVICE_INITIALIZED = 'callcard.LocatorService.initialized';
   static const String METHOD_PLUGIN_INITIALIZE_SERVICE =
       'callcard.LocatorPlugin.initializeService';

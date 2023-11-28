@@ -22,9 +22,11 @@ import yukams.app.background_callcard.pluggables.Pluggable
 import yukams.app.background_callcard.provider.*
 import java.util.HashMap
 import androidx.core.app.ActivityCompat
+import io.flutter.plugin.common.BasicMessageChannel
+import io.flutter.plugin.common.JSONMessageCodec
 import yukams.app.background_callcard.callcard.OverlayCallCardView
 
-class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateListener, Service() {
+class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateListener, Service(), BasicMessageChannel.MessageHandler<Any?> {
     companion object {
         @JvmStatic
         val ACTION_SHUTDOWN = "SHUTDOWN"
@@ -80,6 +82,7 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
     private var wakeLockTime = 60 * 60 * 1000L // 1 hour default wake lock time
     private var locatorClient: BLLocationProvider? = null
     internal lateinit var backgroundChannel: MethodChannel
+    internal lateinit var overlayMessageChannel: BasicMessageChannel<Any?>
     internal var context: Context? = null
     private var pluggables: ArrayList<Pluggable> = ArrayList()
     private var overlayCallCardView: OverlayCallCardView? = null
@@ -369,6 +372,21 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
                         Log.d("plugin", "sendLocationEvent $result")
                         backgroundChannel.invokeMethod(Keys.BCM_SEND_LOCATION, result)
                     }
+            }
+        }
+    }
+
+    override fun onMessage(message: Any?, reply: BasicMessageChannel.Reply<Any?>) {
+        if (backgroundEngine != null) {
+            context?.let {
+                val backgroundMessageChannel =
+                    BasicMessageChannel(
+                        getBinaryMessenger(it)!!,
+                        Keys.BACKGROUND_MESSAGE_CHANNEL_ID,
+                        JSONMessageCodec.INSTANCE
+                    )
+
+                backgroundMessageChannel.send(message, reply)
             }
         }
     }
