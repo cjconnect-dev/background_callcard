@@ -87,7 +87,7 @@ class BackgroundCallcard {
 
   static Future<void> showCallcard(Map<dynamic, dynamic> args) async {
     await _channel.invokeMethod(Keys.METHOD_PLUGIN_SHOW_OVERLAY_VIEW, args);
-    await _messageChannel.send(args);
+    await Future.delayed(Duration(seconds: 1), () => _messageChannel.send(args));
   }
 
   static Future<void> closeCallcard(Map<dynamic, dynamic> args) async {

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
-import android.util.Log
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.WindowManager
@@ -12,6 +12,7 @@ import io.flutter.embedding.android.FlutterTextureView
 import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.engine.FlutterEngineCache
 import yukams.app.background_callcard.CallcardHolderService
+
 
 class OverlayCallCardView(private val context: Context) {
   private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -24,7 +25,8 @@ class OverlayCallCardView(private val context: Context) {
       val engine = FlutterEngineCache.getInstance()[CallcardHolderService.CACHED_TAG]
       engine?.lifecycleChannel?.appIsResumed()
       engine?.let { flutterView?.attachToFlutterEngine(it) }
-      flutterView?.fitsSystemWindows = true
+      flutterView?.fitsSystemWindows = false
+      flutterView?.requestFitSystemWindows()
       flutterView?.isFocusable = true
       flutterView?.isFocusableInTouchMode = true
       flutterView?.setBackgroundColor(Color.TRANSPARENT)

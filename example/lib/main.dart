@@ -177,17 +177,21 @@ class _MyAppState extends State<MyApp> {
     );
 
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter background Locator'),
-        ),
-        body: Container(
-          width: double.maxFinite,
-          padding: const EdgeInsets.all(22),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[start, stop, clear, show, close, status, log],
+      home: SafeArea(
+        top: false,
+        bottom: false,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Flutter background Locator'),
+          ),
+          body: Container(
+            width: double.maxFinite,
+            padding: const EdgeInsets.all(22),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[start, stop, clear, show, close, status, log],
+              ),
             ),
           ),
         ),
