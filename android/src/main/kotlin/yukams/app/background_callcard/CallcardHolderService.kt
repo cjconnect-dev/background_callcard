@@ -186,6 +186,11 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
                     startHolderService(intent)
                 }
             }
+            ACTION_UPDATE_NOTIFICATION == intent?.action -> {
+                if (isServiceRunning) {
+                    updateNotification(intent)
+                }
+            }
             ACTION_SHOW_OVERLAY_VIEW == intent?.action -> {
                 if (isServiceRunning) {
                     showOverlayView(intent)
