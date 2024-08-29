@@ -11,6 +11,7 @@ import android.os.PowerManager
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo
 import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.BinaryMessenger
@@ -95,7 +96,13 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
     override fun onCreate() {
         super.onCreate()
         startLocatorService(this)
-        startForeground(notificationId, getNotification())
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(notificationId, getNotification(), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        } else {
+            startForeground(notificationId, getNotification())
+        }
+
         overlayCallCardView = OverlayCallCardView(this);
         overlayMessageChannel = BasicMessageChannel(
             getBinaryMessenger(this)!!,
@@ -114,7 +121,12 @@ class CallcardHolderService : MethodChannel.MethodCallHandler, LocationUpdateLis
 
         // Starting Service as foreground with a notification prevent service from closing
         val notification = getNotification()
-        startForeground(notificationId, notification)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
+        } else {
+            startForeground(notificationId, notification)
+        }
 
         pluggables.forEach {
             context?.let { it1 -> it.onServiceStart(it1) }
