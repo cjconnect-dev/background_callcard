@@ -39,8 +39,6 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
-
-    namespace "yukams.app.background_callcard"
 }
 
 dependencies {
